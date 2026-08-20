@@ -25,12 +25,28 @@ def extract_skills(text: str) -> dict:
     prompt = EXTRACTION_PROMPT.format(text=text)
     
     try:
-        # Since 2.5 is a modern model, we can safely use the JSON enforcer again!
         response = model.generate_content(
             prompt,
             generation_config={"response_mime_type": "application/json"}
         )
-        return json.loads(response.text)
+        
+        # Safely get the text (will raise exception if blocked by safety filters)
+        raw_text = response.text.strip()
+        
+        # --- CLEANING STEP: Remove markdown backticks if they exist ---
+        if raw_text.startswith("```json"):
+            raw_text = raw_text[7:]
+        if raw_text.startswith("```"):
+            raw_text = raw_text[3:]
+        if raw_text.endswith("```"):
+            raw_text = raw_text[:-3]
+            
+        cleaned_text = raw_text.strip()
+        # -------------------------------------------------------------
+        
+        return json.loads(cleaned_text)
+        
     except Exception as e:
-        print(f"Failed to parse JSON: {e}")
+        # This will now print the EXACT error type to your Vercel Runtime Logs!
+        print(f"CRITICAL GEMINI ERROR: {type(e).__name__} - {str(e)}")
         return {"skills": [], "experience_years": None, "role_title": None}
