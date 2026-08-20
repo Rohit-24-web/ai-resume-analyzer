@@ -4,11 +4,10 @@ from app.routers import extract, compare, roadmap
 
 app = FastAPI(title="ResumeGapAnalyzer API")
 
-# Why: React (localhost:5173) and FastAPI (localhost:8000) are different
-# "origins" for the browser -> without this, browser blocks the request.
+# Updated allow_origins to "*" so the Cloudflare frontend can successfully connect
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
