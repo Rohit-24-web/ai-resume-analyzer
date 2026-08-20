@@ -5,6 +5,6 @@ python-dotenv
 google-generativeai
 google-api-python-client
 rapidfuzz
-pypdf
+pdfplumber
 python-multipart
 requests
