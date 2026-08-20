@@ -2,7 +2,7 @@ fastapi
 uvicorn
 pydantic
 python-dotenv
-google-genai
+google-generativeai
 google-api-python-client
 rapidfuzz
 pypdf
